@@ -1,0 +1,3 @@
+These "source" files are not used in the production app.
+They were initially used to convert the logic of the app from C++
+to JavaScript since Grady was initially programmed in C++
