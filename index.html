@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- GOOGLE FONTS -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- IMPORTS & CUSTOMIZATION -->
+    <link rel="stylesheet" href="./styles.css">
+    <title>The Grady Game</title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="navbar" id="navbar">
+            <h1 class="font title" onclick="location.reload()">The Grady Game</h1>
+    
+            <div class="mode-section" id='mode-section'>
+                <div class="mode-display font" id="mode-display"></div>
+            </div>
+        </div>
+    
+        <div class="content" id="content">
+            <button class="start-button" id="start-button">
+                Start
+            </button>    
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="./app.js"></script>
+</body>
+</html>
