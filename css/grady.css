@@ -167,8 +167,9 @@ a {
     margin-right: 50px;
     color:red;
     cursor:pointer;
+    transition: 0.2s ease-out;
 }
-#about_grady_x:hover {
+.github_link:hover, #about_grady_x:hover {
     color:darkred;
     font-weight:bold;
 }
