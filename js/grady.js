@@ -257,7 +257,7 @@ class Grady {
             "n": this.num_guesses, 
             "t": Date.now(),
         };
-        //$.post("php/logit_a.php", param, function(res) { });
+        $.post("php/logit_a.php", param, function(res) { });
     }
     
     /**
@@ -278,7 +278,7 @@ class Grady {
             "n": this.num_guesses, 
             "t": Date.now(),
         };
-        //$.post("php/logit_f.php", param, function(res) { })
+        $.post("php/logit_f.php", param, function(res) { })
     }
 }
 
