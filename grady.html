@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <title>The Grady Game</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-1.40.1.min.js" charset="utf-8"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,700" rel="stylesheet">
+
+    <link href="css/grady.css" rel="stylesheet" type="text/css" />
+    <script src="js/grady.js"></script>
+  </head>
+
+  <body style="display:none;"> <!-- js will fade in -->
+    <div id="content">
+      <div  id="title" class="title">
+	The Grady Game
+      </div>
+
+      <div id="subtitle" class="subtitle"> <!-- set in js -->
+      </div>
+
+      <div id="player_type_question">
+	Select one<br>
+	Are you a
+	<span id=nerd  title="You're analytical and then artistic" class=player_type>Nerd,</span>
+	<span id=bird  title="You're artistic and then analytical"class=player_type>Bird,</span>
+	<span id=both  title="You're equal parts analytical and artistic" class=player_type>Both,</span>
+	<span id=bored title="You just wanna play this game" class=player_type>Bored?</span>
+      </div>
+
+      <div id="grady_prompt"> <!-- fade in by js after setting this.processing function -->
+	I have a secret parabola in mind. Guess the x where y is the smallest:<p>
+	  <div>
+	    At <i>x</i> = <input class="grady_input" id="grady_input" type="text" inputmode="numeric" placeholder="Your Value Here"/>
+	  </div><br>
+      </div>
+
+      <!-- one of the following two divs will be shown depending on a random decision in js -->
+      <div id="analytical_results" style="display:none;">
+	<table id="analytical_results_table"></table>
+      </div>
+
+      <div id="visual_results" style="display:none;">
+	<div id="visual_results_plot"></div>
+      </div>
+
+      <div class=footer><span id=about_grady_link>About Grady</span></div>
+    </div> <!-- content -->
+
+    <!--------------------------------------------------------- -->
+    <!-- Final stats - hidden until end of game -->
+    <div id=grady_final_stats style="display:none;">
+      <div class=grady_final_stats_text></div>
+    </div>
+
+    <!--------------------------------------------------------- -->
+    <!-- Will be exposed top of EVERYTHING ELSE when the "about grady" link is clicked -->
+    <div id="about_grady_page">
+	<div style="text-align:right;"><span id="about_grady_x">close</span></div>
+
+	<div class=title style="text-align:left;">About Grady</div>
+
+        // TODO: Please edit this page to have the right links, etc.<p>
+
+	Grady is a research project by Computer Science students at
+	Foothill College, Los Altos Hills, CA.<p>
+
+	The project aims to find data to investigate how humans approach
+	problems that can be tackled with analytical versus visual
+	cues. This game, Grady, was developed by us to collect and
+	interpret data to this end. The Grady game project is hosted on
+	Github (put the links in).<p>
+
+	<title>The Research Team</title>
+	<ul>
+	  <li><a class="name_link" href=https://reddit.com/u/isidor_m3232>Isidor Manning</a>, Principal Investigator</li>
+	  <li><a class="name_link" href="">Rina Li</a></li>
+	  <li><a class="name_link" href="">Sanatan</a></li>
+	  <li><a class="name_link" href="">Wesley</a></li>
+	  <li><a class="name_link" href="">Rui</a></li>
+	  <li><a class="name_link" href="">Katelyn</a></li>
+	  <li><a class="name_link" href="">Rebecca</a></li>
+	  <li><a class="name_link" href="">Josh</a></li>
+        </ul>
+
+	You can read the research report [here]. Or check out real-time statistics [here].<p>
+
+	Hope you enjoyed Grady.<p>
+
+	The Grady Team
+    </div>
+  </body>
+</html> 
