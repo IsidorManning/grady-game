@@ -349,7 +349,7 @@ class Grady {
             "m": this.min,
             "t": Date.now(),
         };
-        // $.post("php/logit_s.php", param, function(res) { })
+        $.post("php/logit_s.php", param, function(res) { })
     }
     
     attemptLogit(x) {
@@ -360,7 +360,7 @@ class Grady {
             "n": this.numGuesses, 
             "t": Date.now(),
         };
-        // $.post("php/logit_a.php", param, function(res) { })
+        $.post("php/logit_a.php", param, function(res) { })
     }
     
     // game_id has "f" appended to distinguish from a regular in-game log line, 
@@ -372,7 +372,7 @@ class Grady {
             "n": this.numGuesses, 
             "t": Date.now(),
         };
-        // $.post("php/logit_f.php", param, function(res) { })
+        $.post("php/logit_f.php", param, function(res) { })
     }
 } 
 
