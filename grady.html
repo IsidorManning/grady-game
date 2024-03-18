@@ -1,0 +1,258 @@
+<html>
+  <head>
+    <!-- METADATA -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Grady Game</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-1.40.1.min.js" charset="utf-8"></script>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,700" rel="stylesheet">
+    <link href="css/grady.css" rel="stylesheet" type="text/css" />
+    <script src="js/grady.js"></script>
+  </head>
+
+  <body style="display:none;"> <!-- js will fade in -->
+    <div id="content">
+      <div id="title" class="title" onclick="location.reload()">
+	      The Grady Game
+      </div>
+
+      <div id="subtitle" class="subtitle"> <!-- set in js -->
+      </div>
+
+      <div id="player_type_question">
+	      Select one<br> Are you a
+        <span id=nerd  class=player_type>Nerd,</span>
+        <span id=bird  class=player_type>Bird,</span>
+        <span id=both  class=player_type>Both,</span>
+        <span id=bored class=player_type>Bored?</span>
+      </div>
+      <br>
+      <div id="player_type_tooltip_div">
+        <span id="player_type_tooltip"></span>
+      </div>
+
+      <div id="grady_prompt"> <!-- fade in by js after setting this.processing function -->
+	      I have a secret parabola in mind. Guess the x where y is the smallest:<p>
+        <div>
+          At <i>x</i> = 
+          <input class="grady_input" id="grady_input" 
+          type="text" inputmode="numeric" 
+          placeholder="Your Value Here"/>
+        </div>
+        <br>
+        <p class="subtitle" id="best-guess-holder"></p>
+      </div>
+
+      <!-- one of the following two divs will be shown depending on a random decision in js -->
+      <div id="analytical_results" style="display:none;">
+	      <table id="analytical_results_table"></table>
+      </div>
+
+      <div id="visual_results" style="display:none;">
+	      <div id="visual_results_plot"></div>
+      </div>
+
+      <div class=footer>
+        <span id=about_grady_link>About Grady</span>
+      </div>
+    </div> <!-- content -->
+
+    <!-- Final stats - hidden until end of game -->
+    <div id=grady_final_stats style="display:none;">
+      <div class=grady_final_stats_text></div>
+    </div>
+
+    <!-- Will be exposed top of EVERYTHING ELSE when the "about grady" link is clicked -->
+    <div id="about_grady_page">
+      <div style="margin-bottom: 25px;">
+        <span id="about_grady_x">close</span>
+      </div>
+
+      <div class=title style="text-align:left;">
+        About Grady
+      </div>
+
+      <p class="about-paragraph">
+        Grady is a research project by Computer Science students at
+        Foothill College, Los Altos Hills, CA.
+      </p>
+      
+      <p class="about-paragraph">
+        The project aims to find data to investigate how humans
+        approach problems that can be tackled with analytical versus
+        visual cues. This game, Grady, was developed by us to collect
+        and interpret data to this end. Source code and other data for
+        and from the Grady project can be found
+        <a class='github-link' href="https://github.com/IsidorManning/grady-game">
+          on Github.
+        </a>
+      </p>
+
+      <h2>The Research Team (Alphabetical order)</h2>
+
+      <a href="https://www.reddit.com/user/rebecca_b0920"
+      class="name_link">Rebecca Blau</a> 
+      <p class="about-paragraph">
+        is a first-year CS student at
+        Foothill College. She is interested in learning about how
+        computer science and biology intersect. Rebecca is a hands-on
+        learner, so she wants Grady to reflect on the importance of
+        visual learning. She also seeks to gain experience with
+        collaboration in the computer science field through this
+        opportunity.
+      </p>
+
+      <a href="https://www.reddit.com/user/katelyn_d1886/"
+      class="name_link">Katelyn Deng</a>
+      <p class="about-paragraph">
+        is currently a Dual
+        Enrollment student at Foothill College. As an enthusiastic piano
+        player, she is excited to combine her knowledge of art with her
+        passion for computer science in the Grady Project. Through this
+        opportunity, she especially hopes to gain more hands-on
+        experience in research collaboration and in writing research
+        papers. As an enthusiastic musician, Katelyn is working on a set
+        of sound effects for the next version of this game.
+      </p>
+
+      <a href="https://www.reddit.com/user/rui_d0225"
+      class="name_link">Rui Dong</a>
+      <p class="about-paragraph">
+        is a CS student at Foothill
+        College, and the winter of 2024 is her first quarter. Rui has
+        multiple postgraduate degrees in business and has over 5
+        years of experience working in the operations department of a
+        tech company, where she finally found her interest in CS when her
+        team tried to automate slow-moving workbooks.
+      </p>
+
+      <a href="https://www.reddit.com/user/ryan_g1357"
+      class="name_link">Ryan Gillies</a>
+      
+      <p class="about-paragraph">
+        is a CS student at Foothill
+        College with an additional interest in debate, ethics, and
+        philosophy. Having taken nearly an equal share of STEM and
+        humanities classes, Ryan believes that working with and studying
+        the implications of the Grady game offers an invaluable
+        opportunity to utilize CS knowledge to understand the potential
+        self-fulfilling effects of individual strengths and
+        weaknesses.
+      </p>
+
+      <a href="https://www.reddit.com/user/rina_l108"
+      class="name_link">Rina Li</a>
+      
+      <p class="about-paragraph">
+        is a CS student at Foothill
+        College with an Applied Math degree from UC Berkeley. 
+        She is
+        interested in the intersection of math and cognitive
+        science. She sees the Grady project an opportunity for hands-on
+        research in both fields.
+      </p>
+
+      <a href="https://www.reddit.com/user/isidor_m3232/"
+      class="name_link">Isidor Manning</a>
+      
+      <p class="about-paragraph">
+        is the Principal Investigator and
+        software engineer for the Grady Project, and an international CS
+        student from Sweden. While also being passionate about fields
+        like physics and entrepreneurship, Isidor has always had a
+        particular fascination for AI and data science. As a consequence
+        of this fascination, Isidor is dedicated to developing the Grady
+        game into a statistical tool, capable of unraveling the learning
+        patterns exhibited by various individuals playing the Grady
+        game.
+      </p>
+
+      <a href="https://www.reddit.com/user/wesley_m2/"
+      class="name_link">Wesley Miller</a> 
+      
+      <p class="about-paragraph">
+        holds an MFA in studio art
+        from UC Davis and is now pursuing an education in computer
+        science.
+      </p>
+
+      <a href="https://www.reddit.com/user/Sanatan_M_2953/"
+      class="name_link">Sanatan Mishra</a> 
+      
+      <p class="about-paragraph">
+        is a CS student at
+        Foothill College. He is interested in computer science and
+        wishes to use computer science and AI to make the world more
+        convenient and safer.
+      </p>
+
+      <a href="https://www.reddit.com/user/ariana_y7"
+      class="name_link">Ariana Yi</a> 
+      <p class="about-paragraph">
+        is a dual enrollment student at
+        Foothill College. She is interested in computer science and
+        mathematics, hoping to major in both of these fields in the
+        future. She aspires to be a professor, inspiring and guiding
+        others to learn. As an artist who learns best from the
+        visualization of concepts, she hopes to use her background in
+        both arts and STEM to contribute to the Grady Project, which
+        encourages engaging and effective visual learning.
+      </p>
+
+      <a href="https://www.reddit.com/user/cindy_z333/"
+      class="name_link" href="">Cindy Zhao</a> 
+      
+      <p class="about-paragraph">
+        is studying CS at
+        Foothill/UCSB. Growing up, she found STEM concepts difficult to
+        grasp without proper visual aids. With the Grady project, she
+        hopes to develop recommendations for mathematics instruction to
+        improve general math literacy. She's also interested in
+        researching emergent AI behavior and finding answers at the
+        intersection of tech and the humanities.
+      </p>
+
+      <h2>Research Report</h2>
+
+      The Grady Research report will be available here when it is released.<p class="about-paragraph">
+
+      You can also check out real-time data from Global Grady
+      <a class="log-link"
+      href="https://quests.nonlinearmedia.org/foothill/research/grady/php/show_log.php">
+        here
+      </a><p class="about-paragraph">
+
+      <h2>Easter Eggs/Tips for Grady</h2>
+
+      <ul>
+        <li class="about-paragraph">
+          Toggle the difficulty level by changing “level” in the url:
+          "index.html?level=1". Level 1 is default. Currently acceptable
+          levels are 1, 2 and 3, which require increasing precision in the
+          input guesses. Here are links for <a href="index.html?level=2">level 2</a>
+          and <a href="index.html?level=3">level 3</a> if you you're feeling lazy.
+        </li>
+
+        <li class="about-paragraph">
+          In visual mode, you can zoom in on <strong>only the y-axis</strong> by hovering your cursor over it
+          and using your scroll wheel to zoom.
+        </li>
+
+	      <li class="about-paragraph">
+          Getting too tough? End the game early by entering <i>I give up</i>.
+        </li>
+      </ul><p class="about-paragraph">
+
+      <h2>Feedback and bug reports</h2>
+
+      Please contact isidormanning@gmail.com.<p class="about-paragraph">
+
+      We hope you enjoyed Grady.<p class="about-paragraph">
+
+      The Grady Team<p class="about-paragraph">
+
+    </div> <!-- About Grady -->
+  </body>
+</html> 
