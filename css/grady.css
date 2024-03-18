@@ -50,7 +50,6 @@ a {
     font-size: 18px;
     color:darkred;
     text-shadow: 1px 1px 12px black;
-    border:1px solid black;
 }
 
 .player_type {
@@ -86,6 +85,7 @@ a {
 #grady_final_stats {
     position:absolute; top:0;
     height: 400px;
+    margin-bottom: 25px;
     width: 100%;
     text-align:center;
     z-index: 5;
@@ -101,6 +101,7 @@ a {
 
 #analytical_results {
     margin:auto;
+    margin-top: 50px;
     padding-top: 25px;
     text-align:center;
 }
@@ -126,6 +127,7 @@ a {
 
 #visual_results {
     margin:auto;
+    margin-top: 100px;
     padding-top: 25px;
     text-align:center;
 }
@@ -161,14 +163,27 @@ a {
 
     z-index: 10;
     background: white;
-    width: 100%;
-    height: 800px;
+    width: 1000px;
+    overflow: auto;
     opacity: 0.95;
 
     color: darkred;
-    padding-left: 25px;
+    padding-left: 100px;
+    padding-right:100px;
+    padding-bottom:100px;
 
     display:none;
+}
+#about_grady_page h2 {
+    font-weight:normal;
+    color: darkred;
+    text-shadow: 2px 2px 5px gray;
+    font-size: 24px;
+}
+#about_grady_page a {
+    font-weight:normal;
+    color:red;
+    text-decoration:none;
 }
 
 #about_grady_x {
