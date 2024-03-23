@@ -72,7 +72,6 @@ a {
 #grady_prompt,  .best-guess {
     font-size: 20px;
     color:darkred;
-    margin-bottom: 25px;
     display: none;
 }
 
@@ -132,8 +131,6 @@ a {
 
 #visual_results {
     margin:auto;
-    margin-top: 100px;
-    padding-top: 25px;
     text-align:center;
 }
 
@@ -168,14 +165,13 @@ a {
     left:0px;
     z-index: 10;
     background: white;
-    width: 100vw;
     overflow: auto;
     opacity: 0.95;
 
     color: darkred;
     padding-left: 100px;
-    padding-right:100px;
-    padding-bottom:100px;
+    padding-right:10px;
+    padding-bottom:50px;
 
     display:none;
 }
@@ -189,15 +185,14 @@ a {
     font-weight:normal;
     color:red;
     text-decoration:none;
-    width: 100vw;
 }
 
 #about_grady_x {
     font-size: 15px;
-    margin-right: 50px;
     color:red;
     cursor:pointer;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
+    text-align:right;
 }
 #about_grady_x:hover {
     color:darkred;
