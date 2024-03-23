@@ -69,7 +69,6 @@ $(document).ready(function() {
 class Grady {
     constructor() {
         this.urlParams = new URLSearchParams(window.location.search);
-
         // Initialize properties
         this.playerType = "unknown";
         this.numGuesses = 0;
@@ -92,7 +91,7 @@ class Grady {
 
     setLevel() {
         if (this.urlParams.has('level')) {
-            const level =  +urlParams.get('level');
+            const level =  +this.urlParams.get('level');
             if (isNaN(level) || level < 1  || level > 3) {
                 console.error("Requested level " + this.level + " reset to default (1)");
                 this.level = 1;
