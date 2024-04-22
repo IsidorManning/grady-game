@@ -14,7 +14,7 @@ if response.status_code == 200:
     data = response.text.split('\n')
 
     # Specify the CSV file to write the data to, change the path to the correct one
-    csv_file_path = '/home/rl/MLRina/Grady/grady_data.csv'
+    csv_file_path = '/home/user/Grady/grady_data.csv'
     with open(csv_file_path, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         
@@ -28,59 +28,135 @@ else:
 
 
 
-df = pd.read_csv('/home/rl/MLRina/Grady/grady_data.csv', skiprows=6, skipfooter=1, engine='python', header=None)
-
-# Remove rows with logging issues
-df = df[~df[0].str.contains('dc8f1dd|1fd412a7|13ea52f5|75f04b|2a7af57|2b2e2c5b|15479c28|1e3784ca|20b01869|1197dcb6|1ef922d|1c567b1c|1182c243|2d810d2a|8db98e8|2b20e4c9')]
+# delete first 437 rows and the last row in the file, no column names
+df = pd.read_csv('grady_data.csv', skiprows=437, skipfooter=1, engine='python', header=None)
 
 # Divide df into three subframes based in the value if the column 1
 start_df = df[df[1] == 's']
 attempts_df = df[df[1] == 'a']
 final_df = df[df[1] == 'f']
 
+# rename columns in start_df
 start_df.columns = ["game_id", "status", "timestamp", "player_type", "game_type", "tolerance", "a", "b", "c", "min"]
+# drop rows where game_id is in [3657dd90, b02965, 1144fc11, a637af8, 1cdbfabd] (time outliers)
+start_df = start_df[~start_df['game_id'].isin(['3657dd90', 'b02965', '1144fc11', 'a637af8', '1cdbfabd'])]
 
+# count the number of games started
+games_started = start_df['game_id'].count()
+print("Number of games started: ", games_started)
+# using start_df, count the number of games started by game type
+game_type_count = start_df['game_type'].value_counts()
+print("Number of games started by game type: ", game_type_count)
+# using start_df, count the number of games started by player type
+player_type_count = start_df['player_type'].value_counts()
+print("Number of games started by player type: ", player_type_count)
+# using start_df, count the number of games started by game level
+game_level_count = start_df['tolerance'].value_counts()
+print("Number of games started by game level: ", game_level_count)
+
+
+
+# rename columns in attmepts_df
 attempts_df = attempts_df.drop(attempts_df.columns[[6, 7, 8, 9]], axis=1)
 attempts_df.columns = ["game_id", "status", "timestamp", "guess_number", "x", "y"]
+# drop rows where game_id is in [3657dd90, b02965, 1144fc11, a637af8, 1cdbfabd] (time outliers)
+attempts_df = attempts_df[~attempts_df['game_id'].isin(['3657dd90', 'b02965', '1144fc11', 'a637af8', '1cdbfabd'])]
 
-final_df = df[df[1] == 'f']
-final_df = final_df.drop(final_df.columns[[5, 6, 7, 8, 9]], axis=1)
-final_df.columns = ["game_id", "status", "timestamp", "num_guesses", "outcome"]
+
+# in attempts_df group records by game_id
+grouped = attempts_df.groupby('game_id')
+
+# convert timestamp to int
+attempts_df['timestamp'] = attempts_df['timestamp'].astype(int)
+
+# within each group calculate difference between timestamps
+attempts_df['timestamp_diff'] = grouped['timestamp'].diff()
+
+#replace NaN values with 0
+attempts_df['timestamp_diff'] = attempts_df['timestamp_diff'].fillna(0)
+
+# convert timestamp_diff from millisocnds to seconds
+attempts_df['timestamp_diff'] = attempts_df['timestamp_diff'] / 1000
+
+# compute min, max, mean, median,  of the time between guesses
+min_time_between_guesses = abs(attempts_df['timestamp_diff'].min())
+max_time_between_guesses = attempts_df['timestamp_diff'].max()
+mean_time_between_guesses = attempts_df['timestamp_diff'].mean()
+median_time_between_guesses = attempts_df['timestamp_diff'].median()
+
+#print out the results in one string (add graphs??)
+print("\nMin time between guesses: ", min_time_between_guesses, 'seconds',  "\nMax time between guesses: ", max_time_between_guesses, 'seconds', "\nMean time between guesses: ", mean_time_between_guesses, 'seconds', "\nMedian time between guesses: ", median_time_between_guesses, 'seconds')
+
+# in finish_df remove 5 last columns and rename remainng columns 1-5 as "game_id","f","timestamp","num_guesses","outcome"
+finish_df = df[df[1] == 'f']
+finish_df = finish_df.drop(finish_df.columns[[5, 6, 7, 8, 9]], axis=1)
+finish_df.columns = ["game_id", "status", "timestamp", "num_guesses", "outcome"]
+# drop rows where game_id is in [3657dd90, b02965, 1144fc11, a637af8, 1cdbfabd] (time outliers)
+finish_df = finish_df[~finish_df['game_id'].isin(['3657dd90', 'b02965', '1144fc11', 'a637af8', '1cdbfabd'])]
+
+# using start_df and finish_df count how many start game_id not in the finish game_id
+abandoned_games = start_df[~start_df['game_id'].isin(finish_df['game_id'])]
+abandoned_games = abandoned_games['game_id'].count()
+print("Number of abandoned games: ", abandoned_games)
+
+# using finish_df cout the total number of games finished
+total_games_finished = finish_df['outcome'].count()
+print("Total number of games finished: ", total_games_finished)
+
+# using finish_df, count the number of games finished by outcome
+outcome_count = finish_df['outcome'].value_counts()
+print("Number of games finished by outcome: ", outcome_count)
+
 
 # Merge start_df and final_df on game_id
 start_finish_df = pd.merge(start_df, final_df, on='game_id')
 
-# Using the merged dataframe, compute the time to solve the game, 
-# First cast timestamp_start and timestamp_finish to int, then compute the difference
+# using start_df and finish_df, compute average time to solve the game
+# merge start_df and finish_df on game_id
+start_finish_df = pd.merge(start_df, finish_df, on='game_id')
+
+# using the merged dataframe, compute the time to solve the game, 
+# first cast timestamp_start and timestamp_finish to int, then compute the difference
 start_finish_df['timestamp_start'] = start_finish_df['timestamp_x'].astype(int) 
 start_finish_df['timestamp_finish'] = start_finish_df['timestamp_y'].astype(int)
 start_finish_df['time_to_solve'] = start_finish_df['timestamp_finish'] - start_finish_df['timestamp_start']
-# Now time_to_solve in milliseconds, convert it to minutes
+# now time_to_solve in milliseconds, convert it to minutes
 start_finish_df['time_to_solve'] = start_finish_df['time_to_solve'] / 60000
 
-# Limit time_to_solve to 15 minutes
-start_finish_df = start_finish_df[start_finish_df['time_to_solve'] < 15]
+# Average, min, max, and median for:
+# time per game (start to finish)
+# number of guesses per game
 
+# using start_finish_df, compute min max and median for time to solve the game
+min_time_to_solve = start_finish_df['time_to_solve'].min()
+max_time_to_solve = start_finish_df['time_to_solve'].max()
+median_time_to_solve = start_finish_df['time_to_solve'].median()
+average_time_to_solve = start_finish_df['time_to_solve'].mean()
+print('\n',"Min time to solve the game (minutes): ", min_time_to_solve, '\n', "Max time to solve the game (minutes): ", max_time_to_solve, '\n', "Median time to solve the game (minutes): ", median_time_to_solve, '\n', "Average time to solve the game (minutes): ", average_time_to_solve)
+
+# using start_finish_df, compute min max and median for number of guesses per game
+start_finish_df['num_guesses'] = pd.to_numeric(start_finish_df['num_guesses'], errors='coerce')
+min_num_guesses = start_finish_df['num_guesses'].min()
+max_num_guesses = start_finish_df['num_guesses'].max()
+median_num_guesses = start_finish_df['num_guesses'].median()
+average_num_guesses = start_finish_df['num_guesses'].mean()
+print('\n',"Min number of guesses per game: ", min_num_guesses, '\n', "Max number of guesses per game: ", max_num_guesses, '\n', "Median number of guesses per game: ", median_num_guesses, '\n', "Average number of guesses per game: ", average_num_guesses)
+
+# from start_finish_df, compute the average time to solve the game, using rows where outcome is "Hooray!"
 start_finish_wins_df = start_finish_df[start_finish_df['outcome'] == 'Hooray!']
 avg_time_to_solve_win = start_finish_wins_df['time_to_solve'].mean()
-print("Average time for win a Grady game is ", avg_time_to_solve_win)
-
+print("Average time to win the game is", avg_time_to_solve_win, "minutes")
 start_finish_alas_df = start_finish_df[start_finish_df['outcome'] == 'Alas!']
 avg_time_to_solve_alas = start_finish_alas_df['time_to_solve'].mean()
-print("Average time to give up on a Grady game is ", avg_time_to_solve_alas)
+print("Average time to give up on game is", avg_time_to_solve_alas, "minutes")
 
-# In start_finish_df, compute the average number of guesses to solve the game where outcome is "Hooray!", cast num_guesses to int
-start_finish_wins_df['num_guesses'] = start_finish_wins_df['num_guesses'].astype(int)
+# in start_finish_df, compute the average number of guesses to solve the game where outcome is "Hooray!", cast num_guesses to int
 avg_num_guesses_win = start_finish_wins_df['num_guesses'].mean()
-avg_num_guesses_win
-
-# Do the same for outcome "Alas!"
-start_finish_alas_df['num_guesses'] = start_finish_alas_df['num_guesses'].astype(int)
-avg_num_guesses_alas = start_finish_alas_df['num_guesses'].mean()
-avg_num_guesses_alas
-
 print("Average number of guesses to solve the game when outcome is 'Hooray!': ", avg_num_guesses_win)
+# do the same for outcome "Alas!"
+avg_num_guesses_alas = start_finish_alas_df['num_guesses'].mean()
 print("Average number of guesses to solve the game when outcome is 'Alas!': ", avg_num_guesses_alas)
+
 
 # Using start_finish_df, display relationship between time to solve the game and game type
 sns.boxplot(x='game_type', y='time_to_solve', data=start_finish_df)
@@ -150,7 +226,3 @@ plt.ylabel('Number of games')
 plt.show()
 # Save the plot as a PNG file
 plt.savefig('tolerance_vs_outcome.png')
-
-
-
-
