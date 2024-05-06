@@ -14,7 +14,7 @@ if response.status_code == 200:
     data = response.text.split('\n')
 
     # Specify the CSV file to write the data to, change the path to the correct one
-    csv_file_path = '/home/user/Grady/grady_data.csv'
+    csv_file_path = 'grady-game/grady_data.csv'
     with open(csv_file_path, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         
@@ -161,6 +161,8 @@ print("Average number of guesses to solve the game when outcome is 'Alas!': ", a
 # Using start_finish_df, display relationship between time to solve the game and game type
 sns.boxplot(x='game_type', y='time_to_solve', data=start_finish_df)
 plt.show()
+# Save the plot as a JPG file
+plt.savefig('game_type_vs_time.jpg')
 
 # The plot suggests that games solved using visual methods typically required less time 
 # and had less variability in the time to solve than those solved using analytical methods 
@@ -173,8 +175,8 @@ plt.title('Time to solve the game')
 plt.xlabel('Time to solve the game (minutes)')
 plt.ylabel('Number of games')
 plt.show()
-# Save the plot as a PNG file
-plt.savefig('time_to_solve.png')
+# Savethe plot as a JPG file
+plt.savefig('time_to_solve.jpg')
 
 # Plot the realtionship between number of guesses and time to solve the game, diffenret colors for different outcomes, cast num_guesses to int, display only round numbers
 start_finish_df['num_guesses'] = start_finish_df['num_guesses'].astype(int)
@@ -187,8 +189,8 @@ plt.ylabel('Time to solve the game (minutes)')
 max_guesses = start_finish_df['num_guesses'].max()
 plt.xticks(range(0, max_guesses+1, 1))
 plt.show()
-# Save the plot as a PNG file
-plt.savefig('num_guesses_vs_time.png')
+# Save the plot as a JPG file
+plt.savefig('num_guesses_vs_time.jpg')
 
 # Plot realtionship between game_type and outcomes
 plt.figure(figsize=(10, 6))
@@ -197,15 +199,15 @@ plt.title('Game type vs outcome')
 plt.xlabel('Game type')
 plt.ylabel('Number of games')
 plt.show()
-# Save the plot as a PNG file
-plt.savefig('game_type_vs_outcome.png')
+# Save the plot as a JPG file
+plt.savefig('game_type_vs_outcome.jpg')
 
 # Plot relationship between player_type and outcomes
 plt.figure(figsize=(10, 6))
 sns.countplot(data=start_finish_df, x='player_type', hue='outcome', palette='Set1')
 plt.title('Player type vs outcome')
-# Save the plot as a PNG file
-plt.savefig('player_type_vs_outcome.png')
+# Save the plot as a JPG file
+plt.savefig('player_type_vs_outcome.jpg')
 
 # Plot relationship between player type and time to solve the game, hue is outcome
 plt.figure(figsize=(10, 6))
@@ -214,8 +216,8 @@ plt.title('Player type vs time to solve the game')
 plt.xlabel('Player type')
 plt.ylabel('Time to solve the game (minutes)')
 plt.show()
-# Save the plot as a PNG file
-plt.savefig('player_type_vs_time.png')
+# Save the plot as a JPG file
+plt.savefig('player_type_vs_time.jpg')
 
 # Plot relationship between tolerance and outcomes
 plt.figure(figsize=(10, 6))
@@ -224,5 +226,22 @@ plt.title('Tolerance vs outcome')
 plt.xlabel('Tolerance')
 plt.ylabel('Number of games')
 plt.show()
-# Save the plot as a PNG file
-plt.savefig('tolerance_vs_outcome.png')
+# Save the plot as a JPG file
+plt.savefig('tolerance_vs_outcome.jpg')
+
+
+# Using start_finish_df compute number of game starts by time of hour during day (0-24) 
+start_finish_df['timestamp_start'] = pd.to_datetime(start_finish_df['timestamp_start'], unit='ms')
+start_finish_df['hour'] = start_finish_df['timestamp_start'].dt.hour
+game_starts_by_hour = start_finish_df['hour'].value_counts().sort_index()
+print(game_starts_by_hour)
+
+# Using this data create a plot
+plt.figure(figsize=(10, 6))
+sns.barplot(x=game_starts_by_hour.index, y=game_starts_by_hour.values)
+plt.title('Number of game starts by time of day')
+plt.xlabel('Hour of day')
+plt.ylabel('Number of games started')
+plt.show()
+# Save the plot as a JPG file
+plt.savefig('game_starts_by_hour.jpg')
